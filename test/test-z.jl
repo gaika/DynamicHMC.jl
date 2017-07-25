@@ -102,6 +102,6 @@ end
         sample, _ = NUTS_tune_and_mcmc(RNG, ℓ, 1000)
         zs = zvalue.([sample], mean_cov_ztests(ℓ))
         zvalue_warn.(zs, 4)
-        @test maximum(abs ∘ last, zs) ≤ zthreshold(length(zs), 0.001) + 1.0*RELAX
+        @test maximum(abs ∘ last, zs) ≤ zthreshold(length(zs), 0.001) # + 1.0*RELAX
     end
 end
