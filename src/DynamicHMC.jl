@@ -28,6 +28,8 @@ import Base: rand, length, show
 import Base.LinAlg.checksquare
 import StatsFuns: logsumexp
 
+peekrand(RNG) = rand(copy(RNG), UInt64)
+
 ######################################################################
 # Hamiltonian and leapfrog
 ######################################################################
@@ -876,6 +878,7 @@ end
 Given a random number generator `rng` and a log density function `ℓ`, tune the NUTS sampler
 """
 function NUTS_tune(rng, ℓ, N; args...)
+    println("$(@__FILE__):$(@__LINE__) rand $(peekrand(rng))")
     init_sampler = NUTS_init(rng, ℓ; args...)
     tune(rng, init_sampler, bracketed_doubling_tuner(; args...))
 end
@@ -894,7 +897,9 @@ end
 Most users would use this function, unless they are doing something that requires manual tuning.
 """
 function NUTS_tune_and_mcmc(rng, ℓ, N; args...)
+    println("$(@__FILE__):$(@__LINE__) rand $(peekrand(rng))")
     tuned_sampler = NUTS_tune(rng, ℓ, N; args...)
+    println("$(@__FILE__):$(@__LINE__) rand $(peekrand(rng))")
     mcmc(rng, tuned_sampler, N), tuned_sampler
 end
 
