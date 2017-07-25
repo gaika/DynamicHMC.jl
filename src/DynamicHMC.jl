@@ -716,6 +716,7 @@ Same as [`mcmc`](@ref), but [`adapt`](@ref) stepsize ϵ according to the paramet
 When the last two parameters are not specified, initialize using `adapting_ϵ`.
 """
 function mcmc_adapting_ϵ(rng, sampler::NUTS{TH,Tv,Tf}, N::Int, A_params, A) where {TH,Tv,Tf}
+    println("$(@__FILE__):$(@__LINE__) rand $(peekrand(rng))")
     @unpack H, q, max_depth = sampler
     sample = Vector{NUTSTransition{Tv,Tf}}(N)
     for i in 1:N
@@ -724,6 +725,7 @@ function mcmc_adapting_ϵ(rng, sampler::NUTS{TH,Tv,Tf}, N::Int, A_params, A) whe
         q = trans.q
         sample[i] .= trans
     end
+    println("$(@__FILE__):$(@__LINE__) rand $(peekrand(rng))")
     sample, A
 end
 
