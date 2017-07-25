@@ -96,7 +96,9 @@ end
 end
 
 @testset "normal z tests random" begin
-    for _ in 1:100
+    for i in 1:100
+        println("normal z test random $i")
+        print_rng()
         K = rand(2:10)
         ℓ = MvNormal(randn(K), full(rand_Σ(K)))
         sample, _ = NUTS_tune_and_mcmc(RNG, ℓ, 1000)
