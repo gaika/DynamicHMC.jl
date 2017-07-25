@@ -87,7 +87,9 @@ end
                    4.02846 -2.29754 -1.5309 0.666474 -2.3913 4.89957 3.6118 5.22626;
                    5.57947 -0.0540131 1.78163 1.73862 -2.99741 3.6118 10.215 9.60671;
                    7.28634 1.79718 -0.0821483 2.55874 -1.95031 5.22626 9.60671 11.5554])
-    for ℓ in [ℓ0, ℓ1, ℓ2, ℓ3]
+    for (i,ℓ) in enumerate([ℓ0, ℓ1, ℓ2, ℓ3])
+        println("normal z test random $(i-1)")
+        print_rng()
         sample, _ = NUTS_tune_and_mcmc(RNG, ℓ, 1000)
         zs = zvalue.([sample], mean_cov_ztests(ℓ))
         zvalue_warn.(zs, 4)
@@ -99,7 +101,7 @@ end
     for i in 1:100
         println("normal z test random $i")
         print_rng()
-        K = rand(2:10)
+        K = rand(RNG, 2:10)
         ℓ = MvNormal(randn(K), full(rand_Σ(K)))
         sample, _ = NUTS_tune_and_mcmc(RNG, ℓ, 1000)
         zs = zvalue.([sample], mean_cov_ztests(ℓ))
