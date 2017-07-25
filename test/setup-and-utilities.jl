@@ -23,6 +23,12 @@ using StatsBase
 "RNG for consistent test environment"
 const RNG = srand(UInt32[0x23ef614d, 0x8332e05c, 0x3c574111, 0x121aa2f4])
 
+function serhash(x)
+    b = IOBuffer()
+    serialize(b, x)
+    hash(take!(b))
+end
+
 peekrand(RNG) = rand(copy(RNG), UInt64)
 
 function print_rng()

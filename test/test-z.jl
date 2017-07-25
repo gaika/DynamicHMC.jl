@@ -89,6 +89,7 @@ end
                    7.28634 1.79718 -0.0821483 2.55874 -1.95031 5.22626 9.60671 11.5554])
     for (i,ℓ) in enumerate([ℓ0, ℓ1, ℓ2, ℓ3])
         println("normal z test deterministic $(i-1)")
+        println(hex(serhash(ℓ)))
         print_rng()
         sample, _ = NUTS_tune_and_mcmc(RNG, ℓ, 1000)
         zs = zvalue.([sample], mean_cov_ztests(ℓ))
