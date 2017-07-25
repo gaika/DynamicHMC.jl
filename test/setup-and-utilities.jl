@@ -23,11 +23,14 @@ using StatsBase
 "RNG for consistent test environment"
 const RNG = srand(UInt32[0x23ef614d, 0x8332e05c, 0x3c574111, 0x121aa2f4])
 
+fingerprint(x) = hex(foldr(hash, zero(UInt64), getfield.(x, fieldnames(x))))
+
 function print_rng()
-    G = Base.Random.GLOBAL_RNG
-    print_with_color(:blue, "RNG seed is $(RNG.seed)\n")
-    if G.seed != RNG.seed
-        print_with_color(:red, "global rng seed is different, $(G.seed)\n")
+    f = fingerprint(RNG)
+    F = fingerprint(Base.Random.GLOBAL_RNG)
+    print_with_color(:blue, "RNG hash is $(f)\n")
+    if f != F
+        print_with_color(:red, "global rng hash is different, $(F)\n")
     end
 end
 
