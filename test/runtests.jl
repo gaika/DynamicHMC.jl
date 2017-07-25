@@ -13,7 +13,13 @@ end
               4.02846 -2.29754 -1.5309 0.666474 -2.3913 4.89957 3.6118 5.22626;
               5.57947 -0.0540131 1.78163 1.73862 -2.99741 3.6118 10.215 9.60671;
               7.28634 1.79718 -0.0821483 2.55874 -1.95031 5.22626 9.60671 11.5554])
-println(hex(serhash(ℓ)))
+@testset "foo" begin
+    println(hex(serhash(ℓ)))
+    println("**************************************** rounding is $(rounding(Float64))")
+    println("**************************************** zero subnormals $(get_zero_subnormals())")
+    @test true
+end
+
 # include("setup-and-utilities.jl")
 # # include("test-utilities.jl")
 # # include("test-basics.jl")
