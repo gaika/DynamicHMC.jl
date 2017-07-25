@@ -28,7 +28,7 @@ import Base: rand, length, show
 import Base.LinAlg.checksquare
 import StatsFuns: logsumexp
 
-peekrand(RNG) = rand(copy(RNG), UInt64)
+peekrand(RNG) = hex(rand(copy(RNG), UInt64))
 
 ######################################################################
 # Hamiltonian and leapfrog
@@ -794,8 +794,10 @@ length(tuner::TunerStepsize) = tuner.N
 Given a `tunestate` and a `tuner`, return the updated tune state. Use `rng` as a random number generator.
 """
 function tune(rng, sampler::NUTS, tuner::TunerStepsize)
+    println("$(@__FILE__):$(@__LINE__) rand $(peekrand(rng))")
     @unpack H, max_depth = sampler
     sample, A = mcmc_adapting_ϵ(rng, sampler, tuner.N)
+    println("$(@__FILE__):$(@__LINE__) rand $(peekrand(rng))")
     NUTS(H, sample[end].q, getϵ(A, false), max_depth)
 end
 
@@ -815,12 +817,14 @@ end
 length(tuner::TunerStepsizeCov) = tuner.N
 
 function tune(rng, sampler::NUTS, tuner::TunerStepsizeCov)
+    println("$(@__FILE__):$(@__LINE__) rand $(peekrand(rng))")
     @unpack regularize, N = tuner
     @unpack H, max_depth = sampler
     sample, A = mcmc_adapting_ϵ(rng, sampler, N)
     Σ = sample_cov(sample)
     Σ .+= (UniformScaling(median(diag(Σ)))-Σ) * regularize/N
     κ = GaussianKE(Σ)
+    println("$(@__FILE__):$(@__LINE__) rand $(peekrand(rng))")
     NUTS(Hamiltonian(H.ℓ, κ), sample[end].q, getϵ(A), max_depth)
 end
 
