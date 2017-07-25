@@ -23,16 +23,19 @@ using StatsBase
 "RNG for consistent test environment"
 const RNG = srand(UInt32[0x23ef614d, 0x8332e05c, 0x3c574111, 0x121aa2f4])
 
-fingerprint(x) = hex(foldr(hash, zero(UInt64), getfield.(x, fieldnames(x))))
+peekrand(RNG) = rand(copy(RNG), UInt64)
 
 function print_rng()
-    f = fingerprint(RNG)
-    F = fingerprint(Base.Random.GLOBAL_RNG)
-    print_with_color(:blue, "RNG hash is $(f)\n")
-    if f != F
-        print_with_color(:red, "global rng hash is different, $(F)\n")
+    x1 = peekrand(RNG)
+    x2 = peekrand(Base.Random.GLOBAL_RNG)
+    print_with_color(:blue, "RNG would give $(hex(x1))\n")
+    if x1 != x2
+        print_with_color(:red, "global rng is different, $(hex(x2))\n")
     end
 end
+
+println("$(@__FILE__) @ $(@__LINE__)")
+print_rng()
 
 "Be more tolerant when testing."
 const RELAX = (k = "CONTINUOUS_INTEGRATION"; haskey(ENV, k) && ENV[k] == "true")
