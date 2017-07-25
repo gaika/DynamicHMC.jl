@@ -7,3 +7,6 @@ include("test-stepsize.jl")
 include("test-sample-dummy.jl")
 include("test-sample-normal.jl")
 include("test-z.jl")
+
+println("FINAL RNG $(@__FILE__) @ $(@__LINE__)")
+print_rng()
