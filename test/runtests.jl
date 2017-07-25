@@ -1,3 +1,4 @@
+using Base.Test
 using Distributions
 function serhash(x)
     b = IOBuffer()
