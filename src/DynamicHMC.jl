@@ -880,7 +880,9 @@ Given a random number generator `rng` and a log density function `ℓ`, tune the
 function NUTS_tune(rng, ℓ, N; args...)
     println("$(@__FILE__):$(@__LINE__) rand $(peekrand(rng))")
     init_sampler = NUTS_init(rng, ℓ; args...)
+    println("$(@__FILE__):$(@__LINE__) rand $(peekrand(rng))")
     tune(rng, init_sampler, bracketed_doubling_tuner(; args...))
+    println("$(@__FILE__):$(@__LINE__) rand $(peekrand(rng))")
 end
 
 """
