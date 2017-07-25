@@ -1,3 +1,6 @@
+println(@__FILE__)
+print_rng()
+
 import DynamicHMC:
     rand_bool,
     leaf, move,

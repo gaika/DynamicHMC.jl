@@ -1,3 +1,6 @@
+println(@__FILE__)
+print_rng()
+
 @testset "MvNormal loggradient" begin
     for _ in 1:10
         K = rand(2:6)

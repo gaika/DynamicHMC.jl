@@ -1,3 +1,6 @@
+println(@__FILE__)
+print_rng()
+
 function dummy_acceptance_rate(logϵ, σ = 0.05)
     exp(-logϵ+randn()*σ-σ^2/2)  # not constrained to be ≤ 1, modify accordingly
 end

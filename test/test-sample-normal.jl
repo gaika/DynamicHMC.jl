@@ -1,3 +1,6 @@
+println(@__FILE__)
+print_rng()
+
 @testset "unit normal simple HMC" begin
     # this is just testing leapfrog
     K = 2

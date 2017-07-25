@@ -1,3 +1,6 @@
+println(@__FILE__)
+print_rng()
+
 import DynamicHMC: GaussianKE, Hamiltonian, PhasePoint, loggradient, logdensity,
     phasepoint, rand_phasepoint, leapfrog, move
 

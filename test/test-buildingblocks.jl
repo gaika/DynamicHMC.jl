@@ -1,3 +1,6 @@
+println(@__FILE__)
+print_rng()
+
 import DynamicHMC:
     TurnStatistic, isturning, combine_turnstats,
     Proposal, combine_proposals, 

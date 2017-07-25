@@ -1,3 +1,6 @@
+println(@__FILE__)
+print_rng()
+
 """
     zvalue(xs, x̄)
 

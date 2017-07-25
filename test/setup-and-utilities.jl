@@ -23,6 +23,14 @@ using StatsBase
 "RNG for consistent test environment"
 const RNG = srand(UInt32[0x23ef614d, 0x8332e05c, 0x3c574111, 0x121aa2f4])
 
+function print_rng()
+    G = Base.Random.GLOBAL_RNG
+    print_with_color(:blue, "RNG seed is $(RNG.seed)\n")
+    if G.seed != RNG.seed
+        print_with_color(:red, "global rng seed is different, $(G.seed)\n")
+    end
+end
+
 "Be more tolerant when testing."
 const RELAX = (k = "CONTINUOUS_INTEGRATION"; haskey(ENV, k) && ENV[k] == "true")
 
