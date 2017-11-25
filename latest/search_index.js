@@ -29,7 +29,7 @@ var documenterSearchIndex = {"docs": [
     "page": "High-level API",
     "title": "The density function ell: an example",
     "category": "section",
-    "text": "The density function should take a single argument q, which is a vector of numbers, and return an object which provides the methods DiffResults.value and DiffResults.gradient to access ell(q) and nablaell(q), respectively.The following example implements the density function for n observations from a textBernoulli(alpha) distribution, s of which are 1. The complete example is available in tests/example.jl.It is convenient to define a structure that holds the data,struct BernoulliProblem\n    \"Total number of draws in the data.\"\n    n::Int\n    \"Number of draws =1 in the data.\"\n    s::Int\nendthen make it callable:function (problem::BernoulliProblem)(α)\n    @unpack n, s = problem        # using Parameters\n    s * log(α) + (n-s) * log(1-α) # log likelihood\nendand finally define an object with actual data:p = BernoulliProblem(100, 40)                             # original problemThe value p is a function that takes a single real number, and returns the likelihood. However, the functions in this packagetake a vector which contains elements in mathbbR, and\nreturn an object that can provide the value and the derivatives.We could implement both manually, but it is convenient to use wrappers from two packages mentioned in the introduction:pt = TransformLogLikelihood(p, bridge(ℝ, Segment(0, 1)))  # transform\npt∇ = ForwardGradientWrapper(pt, [0.0]);                  # AD using ForwardDiff.jlThen we can call the high-level function NUTS_init_tune_mcmc that initializes and tunes the sampler, and samples from it:sample, NUTS_tuned = NUTS_init_tune_mcmc(Base.Random.GLOBAL_RNG, pt∇, 1, 1000);The returned objects are the sample, which contains the draws and diagnostic information, and the tuned sampler, which we could use to continue sampling, perhaps in parallel.We obtain the posterior using the transformation and get_position:posterior = map(get_transformation(pt) ∘ get_position, sample);which is a vector of vectors. Calculate the effective sample size and NUTS-specific statistics asjulia> effective_sample_size(first.(posterior))\n323.6134099739428\n\njulia> NUTS_statistics(sample)         # NUTS-specific statistics\nHamiltonian Monte Carlo sample of length 1000\n  acceptance rate mean: 0.92, min/25%/median/75%/max: 0.26 0.87 0.97 1.0 1.0\n  termination: AdjacentTurn => 31% DoubledTurn => 69%\n  depth: 1 => 66% 2 => 34%"
+    "text": "The density function should take a single argument q, which is a vector of numbers, and return an object which provides the methods DiffResults.value and DiffResults.gradient to access ell(q) and nablaell(q), respectively.The following example implements the density function for n observations from a textBernoulli(alpha) distribution, s of which are 1. The complete example is available in tests/example.jl.It is convenient to define a structure that holds the data,struct BernoulliProblem\n    \"Total number of draws in the data.\"\n    n::Int\n    \"Number of draws =1 in the data.\"\n    s::Int\nendthen make it callable:function (problem::BernoulliProblem)(α)\n    @unpack n, s = problem        # using Parameters\n    s * log(α) + (n-s) * log(1-α) # log likelihood\nendand finally define an object with actual data:p = BernoulliProblem(100, 40)                             # original problemThe value p is a function that takes a single real number, and returns the likelihood. However, the functions in this packagetake a vector which contains elements in mathbbR, and\nexpect ell (ie p above) to return an object that can provide the value and the derivatives.We could implement both manually, but it is convenient to use wrappers from two packages mentioned in the introduction:pt = TransformLogLikelihood(p, bridge(ℝ, Segment(0, 1)))  # transform\npt∇ = ForwardGradientWrapper(pt, [0.0]);                  # AD using ForwardDiff.jlThen we can call the high-level function NUTS_init_tune_mcmc that initializes and tunes the sampler, and samples from it:sample, NUTS_tuned = NUTS_init_tune_mcmc(pt∇, 1, 1000);The returned objects are the sample, which contains the draws and diagnostic information, and the tuned sampler, which we could use to continue sampling.We obtain the posterior using the transformation and get_position:posterior = map(get_transformation(pt) ∘ get_position, sample);which is a vector of vectors. Calculate the effective sample size and NUTS-specific statistics asjulia> effective_sample_size(first.(posterior))\n323.6134099739428\n\njulia> NUTS_statistics(sample)         # NUTS-specific statistics\nHamiltonian Monte Carlo sample of length 1000\n  acceptance rate mean: 0.92, min/25%/median/75%/max: 0.26 0.87 0.97 1.0 1.0\n  termination: AdjacentTurn => 31% DoubledTurn => 69%\n  depth: 1 => 66% 2 => 34%"
 },
 
 {
@@ -37,7 +37,7 @@ var documenterSearchIndex = {"docs": [
     "page": "High-level API",
     "title": "DynamicHMC.NUTS_init_tune_mcmc",
     "category": "Function",
-    "text": "sample, tuned_sampler = NUTS_init_tune_mcmc(rng, ℓ, q_or_dim, N; args...)\n\nInit, tune, and then draw N samples from ℓ using the NUTS algorithm.\n\nrng is the random number generator, q_or_dim is a starting position or the dimension (for random initialization).\n\nargs are passed on to various methods, see NUTS_init and bracketed_doubling_tuner.\n\nFor parameters q, ℓ(q) should return an object that support the following methods: DiffResults.value, DiffResults.gradient.\n\nMost users would use this function, unless they are doing something that requires manual tuning.\n\n\n\n"
+    "text": "sample, tuned_sampler = NUTS_init_tune_mcmc(rng, ℓ, q_or_dim, N; args...)\n\nInit, tune, and then draw N samples from ℓ using the NUTS algorithm.\n\nrng is the random number generator (defaults to Base.Random.GLOBAL_RNG), q_or_dim is a starting position or the dimension (for random initialization).\n\nargs are passed on to various methods, see NUTS_init and bracketed_doubling_tuner.\n\nFor parameters q, ℓ(q) should return an object that support the following methods: DiffResults.value, DiffResults.gradient.\n\nMost users would use this function, unless they are doing something that requires manual tuning.\n\n\n\n"
 },
 
 {
@@ -133,7 +133,7 @@ var documenterSearchIndex = {"docs": [
     "page": "High-level API",
     "title": "Sampling and accessors",
     "category": "section",
-    "text": "Most users would use this function, which initializes and tunes the parameters of the algorithm, then samples. Parameters can be set manually for difficult posteriors.NUTS_init_tune_mcmcThese functions can be used use to perform the steps above manually.NUTS_init\ntune\nmcmcThe resulting sample is a vector of NUTS_Transition objects, for which the following accessors exist:NUTS_Transition\nget_position\nget_neg_energy\nget_depth\nget_termination\nget_acceptance_rate\nget_steps\nget_position_matrix"
+    "text": "Most users would use this function, which initializes and tunes the parameters of the algorithm, then samples. Parameters can be set manually for difficult posteriors.NUTS_init_tune_mcmcimportant: Important\nThe NUTS sampler saves a random number generator and uses it for random draws. When running in parallel, you should initialize NUTS_init_tune_mcmc with a random number generator as its first argument explicitly, making sure that each thread has its own one.These functions can be used use to perform the steps above manually.NUTS_init\ntune\nmcmcThe resulting sample is a vector of NUTS_Transition objects, for which the following accessors exist:NUTS_Transition\nget_position\nget_neg_energy\nget_depth\nget_termination\nget_acceptance_rate\nget_steps\nget_position_matrix"
 },
 
 {
@@ -649,11 +649,11 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "lowlevel/#DynamicHMC.rand_bool",
+    "location": "lowlevel/#DynamicHMC.NUTS_Statistics",
     "page": "Low-level building blocks",
-    "title": "DynamicHMC.rand_bool",
-    "category": "Function",
-    "text": "rand_bool(rng, prob)\n\nRandom boolean which is true with the given probability prob.\n\nAll random numbers in this library are obtained from this function.\n\n\n\n"
+    "title": "DynamicHMC.NUTS_Statistics",
+    "category": "Type",
+    "text": "Storing the output of NUTS_statistics in a structured way, for pretty printing. Currently for internal use.\n\n\n\n"
 },
 
 {
@@ -665,11 +665,27 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
+    "location": "lowlevel/#diagnostics_lowlevel-1",
+    "page": "Low-level building blocks",
+    "title": "Diagnostics",
+    "category": "section",
+    "text": "NUTS_Statistics\nACCEPTANCE_QUANTILES"
+},
+
+{
+    "location": "lowlevel/#DynamicHMC.rand_bool",
+    "page": "Low-level building blocks",
+    "title": "DynamicHMC.rand_bool",
+    "category": "Function",
+    "text": "rand_bool(rng, prob)\n\nRandom boolean which is true with the given probability prob.\n\nAll random numbers in this library are obtained from this function.\n\n\n\n"
+},
+
+{
     "location": "lowlevel/#Utilities-and-miscellanea-1",
     "page": "Low-level building blocks",
     "title": "Utilities and miscellanea",
     "category": "section",
-    "text": "rand_bool\nACCEPTANCE_QUANTILES"
+    "text": "rand_bool"
 },
 
 ]}
