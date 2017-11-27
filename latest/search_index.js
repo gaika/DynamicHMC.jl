@@ -45,7 +45,7 @@ var documenterSearchIndex = {"docs": [
     "page": "High-level API",
     "title": "DynamicHMC.NUTS_init",
     "category": "Function",
-    "text": "NUTS_init(rng, ℓ, q; κ = GaussianKE(length(q)), p, max_depth, ϵ)\n\nInitialize a NUTS sampler for log density ℓ using local information.\n\nArguments\n\nrng: the random number generator\nℓ: the likelihood function, should return a type that supports DiffResults.value and DiffResults.gradient\nq: initial position.\nκ: kinetic energy specification. Default: Gaussian with identity matrix.\np: initial momentum. Default: random from standard multivariate normal.\nmax_depth: maximum tree depth. Default: 5.\nϵ: initial stepsize. Default: found using a bracketing algorithm.\n\n\n\nNUTS_init(rng, ℓ, dim::Integer; args...)\n\nRandom initialization with position randn(dim), all other arguments are passed on the the other method of this function.\n\n\n\n"
+    "text": "NUTS_init(rng, ℓ, q; κ = GaussianKE(length(q)), p, max_depth, ϵ)\n\nInitialize a NUTS sampler for log density ℓ using local information.\n\nArguments\n\nrng: the random number generator\nℓ: the likelihood function, should return a type that supports DiffResults.value and DiffResults.gradient\nq: initial position.\nκ: kinetic energy specification. Default: Gaussian with identity matrix.\np: initial momentum. Default: random from standard multivariate normal.\nmax_depth: maximum tree depth. Default: 5.\nϵ: initial stepsize, or parameters for finding it (passed on to find_initial_stepsize.\n\n\n\nNUTS_init(rng, ℓ, dim::Integer; args...)\n\nRandom initialization with position randn(dim), all other arguments are passed on the the other method of this function.\n\n\n\n"
 },
 
 {
@@ -341,7 +341,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Low-level building blocks",
     "title": "DynamicHMC.neg_energy",
     "category": "Function",
-    "text": "neg_energy(κ, p, [q])\n\nReturn the log density of kinetic energy κ, at momentum p. Some kinetic energies (eg Riemannian geometry) will need q, too.\n\n\n\nLog density for Hamiltonian H at point z.\n\n\n\n"
+    "text": "neg_energy(κ, p, [q])\n\nReturn the log density of kinetic energy κ, at momentum p. Some kinetic energies (eg Riemannian geometry) will need q, too.\n\n\n\nneg_energy(H, z)\n\n\nLog density for Hamiltonian H at point z.\n\nIf ℓ(q) == -Inf (rejected), ignores the kinetic energy.\n\n\n\n"
 },
 
 {
@@ -377,43 +377,43 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "lowlevel/#DynamicHMC.bracket_zero",
+    "location": "lowlevel/#DynamicHMC.find_initial_stepsize",
     "page": "Low-level building blocks",
-    "title": "DynamicHMC.bracket_zero",
+    "title": "DynamicHMC.find_initial_stepsize",
     "category": "Function",
-    "text": "bracket_zero(f, x, Δ, C; maxiter)\n\nFind x₁, x₂′ that bracket f(x) = 0. f should be monotone, use Δ > 0 for increasing and Δ < 0 decreasing f.\n\nReturn x₁, f(x₁), x₂′, f(x₂′). x₁ and `x₂′ are not necessarily ordered.\n\nAlgorithm: start at the given x, adjust by Δ — for increasing f, use Δ > 0. At each step, multiply Δ by C. Stop and throw an error after maxiter iterations.\n\n\n\n"
+    "text": "find_initial_stepsize(parameters, A)\n\n\nFind an initial stepsize that matches the conditions of parameters (see InitialStepsizeSearch).\n\nA is the local acceptance ratio (uncapped). When given a Hamiltonian H and a phasepoint z, it will be calculated using local_acceptance_ratio.\n\n\n\n"
 },
 
 {
-    "location": "lowlevel/#DynamicHMC.find_zero",
+    "location": "lowlevel/#DynamicHMC.InitialStepsizeSearch",
     "page": "Low-level building blocks",
-    "title": "DynamicHMC.find_zero",
-    "category": "Function",
-    "text": "find_zero(f, a, b, tol; [fa], [fb], [maxiter])\n\nUse bisection to find x  ab such that |f(x)| < tol. When f is costly, specify fa and fb.\n\nWhen does not converge within maxiter iterations, throw an error.\n\n\n\n"
+    "title": "DynamicHMC.InitialStepsizeSearch",
+    "category": "Type",
+    "text": "Parameters for the search algorithm for the initial stepsize.\n\nThe algorithm finds an initial stepsize  so that the local acceptance ratio A() satisfies\n\na_textmin  A()  a_textmax\n\nThis is achieved by an initial bracketing, then bisection.\n\na_min\nLowest local acceptance rate.\na_max\nHighest local acceptance rate.\nϵ₀\nInitial stepsize.\nC\nScale factor for initial bracketing, > 1. Default: 2.0.\nmaxiter_crossing\nMaximum number of iterations for initial bracketing.\nmaxiter_bisect\nMaximum number of iterations for bisection.\n\nnote: Note\nCf. Hoffman and Gelman (2014), which does not ensure bounds for the acceptance ratio, just that it has crossed a threshold. This version seems to work better for some tricky posteriors with high curvature.\n\n\n\n"
 },
 
 {
-    "location": "lowlevel/#DynamicHMC.bracket_find_zero",
+    "location": "lowlevel/#DynamicHMC.find_crossing_stepsize",
     "page": "Low-level building blocks",
-    "title": "DynamicHMC.bracket_find_zero",
+    "title": "DynamicHMC.find_crossing_stepsize",
     "category": "Function",
-    "text": "bracket_find_zero(f, x, Δ, C, tol; [maxiter_bracket], [maxiter_bisection])\n\nA combination of bracket_zero and bracket_find_zero.\n\n\n\n"
+    "text": "Find the stepsize for which the local acceptance rate A(ϵ) crosses a.\n\nfind_crossing_stepsize(parameters, A, ϵ₀)\nfind_crossing_stepsize(parameters, A, ϵ₀, Aϵ₀)\n\n\nReturn ϵ₀, A(ϵ₀), ϵ₁, A(ϵ₁), whereϵ₀andϵ₁are stepsizes before and after crossingawithA(ϵ)`, respectively.\n\nAssumes that A()  (a_textmin a_textmax), where the latter are defined in parameters.\n\nparameters: parameters for the iteration.\nA: local acceptance ratio (uncapped), a function of stepsize ϵ\nϵ₀, Aϵ₀: initial value of ϵ, and A(ϵ₀)\n\n\n\n"
 },
 
 {
-    "location": "lowlevel/#DynamicHMC.logϵ_residual",
+    "location": "lowlevel/#DynamicHMC.bisect_stepsize",
     "page": "Low-level building blocks",
-    "title": "DynamicHMC.logϵ_residual",
+    "title": "DynamicHMC.bisect_stepsize",
     "category": "Function",
-    "text": "logϵ_residual(H, z, a)\n\nReturn a function that calculates A(logϵ)-a, where logϵ is the log of the stepsize, A is the acceptance rate for a single leapfrog step, and a is the target.\n\n\n\n"
+    "text": "Return the desired stepsize ϵ by bisection.\n\nbisect_stepsize(parameters, A, ϵ₀, ϵ₁)\nbisect_stepsize(parameters, A, ϵ₀, ϵ₁, Aϵ₀)\nbisect_stepsize(parameters, A, ϵ₀, ϵ₁, Aϵ₀, Aϵ₁)\n\n\nparameters: algorithm parameters, see InitialStepsizeSearch\nA: local acceptance ratio (uncapped), a function of stepsize ϵ\nϵ₀, ϵ₁, Aϵ₀, Aϵ₁: stepsizes and acceptance rates (latter optional).\n\nThis function assumes that   , the stepsize is not yet acceptable, and the cached A values have the correct ordering.\n\n\n\n"
 },
 
 {
-    "location": "lowlevel/#DynamicHMC.find_reasonable_logϵ",
+    "location": "lowlevel/#DynamicHMC.local_acceptance_ratio",
     "page": "Low-level building blocks",
-    "title": "DynamicHMC.find_reasonable_logϵ",
+    "title": "DynamicHMC.local_acceptance_ratio",
     "category": "Function",
-    "text": "find_reasonable_logϵ(H, z; tol, a, ϵ₀, maxiter_bracket, maxiter_bisection)\n\nLet\n\nz() = leapfrog(H z )\n\nand\n\nA() = exp(neg_energy(H z) - neg_energy(H z))\n\ndenote the ratio of densities between a point z and another point after one leapfrog step with stepsize ϵ.\n\nReturns an ϵ such that |log(A(ϵ)) - log(a)| ≤ tol. Uses iterative bracketing (with gently expanding steps) and rootfinding.\n\nStarts at ϵ₀, uses maxiter iterations for the bracketing and the rootfinding, respectively.\n\n\n\n"
+    "text": "local_acceptance_ratio(H, z)\n\n\nReturn a function of the stepsize () that calculates the local acceptance ratio for a single leapfrog step around z along the Hamiltonian H. Formally, let\n\nA() = exp(textneg_energy(H textleapfrog(H z )) - textneg_energy(H z))\n\nNote that the ratio is not capped by 1, so it is not a valid probability per se.\n\n\n\n"
 },
 
 {
@@ -421,7 +421,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Low-level building blocks",
     "title": "Finding initial stepsize epsilon",
     "category": "section",
-    "text": "General rootfinding algorithms.bracket_zero\nfind_zero\nbracket_find_zeroLocal stepsize tuning.logϵ_residual\nfind_reasonable_logϵ"
+    "text": "Local stepsize tuning.The local acceptance ratio is technically a probability, but for finding the initial stepsize, it is not capped at 1.Also, the values are cached as this is assumed to be moderately expensive to calculate.find_initial_stepsize\nInitialStepsizeSearch\nfind_crossing_stepsize\nbisect_stepsize\nlocal_acceptance_ratio"
 },
 
 {
@@ -665,11 +665,19 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
+    "location": "lowlevel/#DynamicHMC.explore_local_acceptance_ratios",
+    "page": "Low-level building blocks",
+    "title": "DynamicHMC.explore_local_acceptance_ratios",
+    "category": "Function",
+    "text": "explore_local_acceptance_ratios(H, q, ϵs, ps)\n\n\nReturn a matrix of local_acceptance_ratio values for stepsizes ϵs and the given momentums ps. The latter is calculated from random values when an integer is given.\n\nTo facilitate plotting, - values are replaced by NaN.\n\n\n\n"
+},
+
+{
     "location": "lowlevel/#diagnostics_lowlevel-1",
     "page": "Low-level building blocks",
     "title": "Diagnostics",
     "category": "section",
-    "text": "NUTS_Statistics\nACCEPTANCE_QUANTILES"
+    "text": "NUTS_Statistics\nACCEPTANCE_QUANTILES\nexplore_local_acceptance_ratios"
 },
 
 {
