@@ -37,7 +37,7 @@ var documenterSearchIndex = {"docs": [
     "page": "High-level API",
     "title": "DynamicHMC.NUTS_init_tune_mcmc",
     "category": "Function",
-    "text": "sample, tuned_sampler = NUTS_init_tune_mcmc(rng, ℓ, q_or_dim, N; args...)\n\nInit, tune, and then draw N samples from ℓ using the NUTS algorithm.\n\nrng is the random number generator (defaults to Base.Random.GLOBAL_RNG), q_or_dim is a starting position or the dimension (for random initialization).\n\nargs are passed on to various methods, see NUTS_init and bracketed_doubling_tuner.\n\nFor parameters q, ℓ(q) should return an object that support the following methods: DiffResults.value, DiffResults.gradient.\n\nMost users would use this function, unless they are doing something that requires manual tuning.\n\n\n\n"
+    "text": "NUTS_init_tune_mcmc(rng, ℓ, q_or_dim, N; args...)\n\n\nInit, tune, and then draw N samples from ℓ using the NUTS algorithm.\n\nReturn the sample (a vector of NUTS_transitions) and the tuned sampler.\n\nrng is the random number generator.\n\nq_or_dim is a starting position or the dimension (for random initialization).\n\nargs are passed on to various methods, see NUTS_init and bracketed_doubling_tuner.\n\nFor parameters q, ℓ(q) should return an object that support the following methods: DiffResults.value, DiffResults.gradient.\n\nMost users would use this function, unless they are doing something that requires manual tuning.\n\n\n\nNUTS_init_tune_mcmc(ℓ, q_or_dim, N; args...)\n\n\nSame as the other method, but with random number generator Base.Random.GLOBAL_RNG.\n\n\n\n"
 },
 
 {
