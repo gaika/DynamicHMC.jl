@@ -181,7 +181,7 @@ var documenterSearchIndex = {"docs": [
     "page": "High-level API",
     "title": "DynamicHMC.KineticEnergy",
     "category": "type",
-    "text": "Kinetic energy specifications.\n\nFor all subtypes, it is assumed that kinetic energy is symmetric in the momentum p, ie.\n\nneg_energy(::KineticEnergy, p, q) == neg_energy(::KineticEnergy, -p, q)\n\nWhen the above is violated, various implicit assumptions will not hold.\n\n\n\n"
+    "text": "Kinetic energy specifications.\n\nFor all subtypes, it is implicitly assumed that kinetic energy is symmetric in the momentum p, ie.\n\nneg_energy(::KineticEnergy, p, q) == neg_energy(::KineticEnergy, -p, q)\n\nWhen the above is violated, the consequences are undefined.\n\n\n\n"
 },
 
 {
@@ -197,7 +197,7 @@ var documenterSearchIndex = {"docs": [
     "page": "High-level API",
     "title": "DynamicHMC.GaussianKE",
     "category": "type",
-    "text": "Gaussian kinetic energy.\n\np mid q  textNormal(0 M) qquad (textimportantly independent of q)\n\nThe inverse covariance M⁻¹ is stored.\n\n\n\n"
+    "text": "Gaussian kinetic energy.\n\np  q  N(0 M)\n\nindependently of q.\n\nThe inverse covariance M is stored.\n\n\n\n"
 },
 
 {
@@ -681,11 +681,67 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
+    "location": "lowlevel/#DynamicHMC.AbstractReport",
+    "page": "Low-level building blocks",
+    "title": "DynamicHMC.AbstractReport",
+    "category": "type",
+    "text": "Subtypes implement report!, start_progress!, and end_progress!.\n\n\n\n"
+},
+
+{
+    "location": "lowlevel/#DynamicHMC.report!",
+    "page": "Low-level building blocks",
+    "title": "DynamicHMC.report!",
+    "category": "function",
+    "text": "report!(report, count)\n\n\nDisplay objects via the appropriate mechanism.\n\nWhen a single Int is given, it is treated as the index of the current step.\n\n\n\n"
+},
+
+{
+    "location": "lowlevel/#DynamicHMC.start_progress!",
+    "page": "Low-level building blocks",
+    "title": "DynamicHMC.start_progress!",
+    "category": "function",
+    "text": "start_progress!(report, total, msg)\n\n\nStart a progress meter for an iteration. The second argument is either\n\nnothing, if the total number of steps is unknown,\nan integer, for the total number of steps.\n\nAfter calling this function, report! should be used at every step with an integer.\n\n\n\n"
+},
+
+{
+    "location": "lowlevel/#DynamicHMC.end_progress!",
+    "page": "Low-level building blocks",
+    "title": "DynamicHMC.end_progress!",
+    "category": "function",
+    "text": "end_progress!(report)\n\n\nTerminate a progress meter.\n\n\n\n"
+},
+
+{
+    "location": "lowlevel/#DynamicHMC.ReportIO",
+    "page": "Low-level building blocks",
+    "title": "DynamicHMC.ReportIO",
+    "category": "type",
+    "text": "ReportIO(; io, color, step_count)\n\n\nReport to the given stream io (defaults to STDERR).\n\nFor progress bars, emit new information every after step_count steps.\n\ncolor is used with print_with_color.\n\n\n\n"
+},
+
+{
+    "location": "lowlevel/#DynamicHMC.ReportSilent",
+    "page": "Low-level building blocks",
+    "title": "DynamicHMC.ReportSilent",
+    "category": "type",
+    "text": "A placeholder type for not reporting any information.\n\n\n\n"
+},
+
+{
+    "location": "lowlevel/#Reporting-information-during-runs-1",
+    "page": "Low-level building blocks",
+    "title": "Reporting information during runs",
+    "category": "section",
+    "text": "Samplers take an AbstractReport argument, which is then used for reporting. The interface is as follows.DynamicHMC.AbstractReport\nDynamicHMC.report!\nDynamicHMC.start_progress!\nDynamicHMC.end_progress!The default isReportIOReporting information can be suppressed withReportSilentOther interfaces should define similar types."
+},
+
+{
     "location": "lowlevel/#DynamicHMC.rand_bool",
     "page": "Low-level building blocks",
     "title": "DynamicHMC.rand_bool",
     "category": "function",
-    "text": "rand_bool(rng, prob)\n\nRandom boolean which is true with the given probability prob.\n\nAll random numbers in this library are obtained from this function.\n\n\n\n"
+    "text": "rand_bool(rng, prob)\n\n\nRandom boolean which is true with the given probability prob.\n\nAll random numbers in this library are obtained from this function.\n\n\n\n"
 },
 
 {
