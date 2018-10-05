@@ -49,6 +49,30 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
+    "location": "api/#DynamicHMC.NUTS_init",
+    "page": "High-level API",
+    "title": "DynamicHMC.NUTS_init",
+    "category": "function",
+    "text": "NUTS_init(rng, ℓ; q, κ, p, max_depth, ϵ, report)\n\n\nInitialize a NUTS sampler for log density ℓ using local information.\n\nMandatory arguments\n\nrng: the random number generator\nℓ: the log density function specification\n\nKeyword arguments\n\nq: initial position. Default: random (from IID standard normals).\nκ: kinetic energy specification. Default: Gaussian with identity matrix.\np: initial momentum. Default: random from standard multivariate normal.\nmax_depth: maximum tree depth. Default: 5.\nϵ: initial stepsize, or parameters for finding it (passed on to find_initial_stepsize.\n\n\n\n\n\n"
+},
+
+{
+    "location": "api/#DynamicHMC.tune",
+    "page": "High-level API",
+    "title": "DynamicHMC.tune",
+    "category": "function",
+    "text": "sampler′ = tune(sampler, tune)\n\nGiven a sampler (or similar a parametrization) and a tuner, return the updated sampler state after tuning.\n\n\n\n\n\n"
+},
+
+{
+    "location": "api/#DynamicHMC.mcmc",
+    "page": "High-level API",
+    "title": "DynamicHMC.mcmc",
+    "category": "function",
+    "text": "mcmc(sampler, N)\n\nRun the MCMC sampler for N iterations, returning the results as a vector, which has elements that conform to the sampler.\n\n\n\n\n\n"
+},
+
+{
     "location": "api/#DynamicHMC.NUTS_Transition",
     "page": "High-level API",
     "title": "DynamicHMC.NUTS_Transition",
@@ -237,7 +261,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Low-level building blocks",
     "title": "DynamicHMC.PhasePoint",
     "category": "type",
-    "text": "struct PhasePoint{T, S<:LogDensityProblems.ValueGradient}\n\nA point in phase space, consists of a position and a momentum.\n\nLog densities and gradients are saved for speed gains, so that the gradient of ℓ at q is not calculated twice for every leapfrog step (both as start- and endpoints).\n\nBecause of caching, a PhasePoint should only be used with a specific Hamiltonian.\n\n\n\n\n\n"
+    "text": "struct PhasePoint{T, S<:ValueGradient}\n\nA point in phase space, consists of a position and a momentum.\n\nLog densities and gradients are saved for speed gains, so that the gradient of ℓ at q is not calculated twice for every leapfrog step (both as start- and endpoints).\n\nBecause of caching, a PhasePoint should only be used with a specific Hamiltonian.\n\n\n\n\n\n"
 },
 
 {
