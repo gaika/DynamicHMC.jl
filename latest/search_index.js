@@ -49,6 +49,30 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
+    "location": "api/#DynamicHMC.NUTS_init",
+    "page": "High-level API",
+    "title": "DynamicHMC.NUTS_init",
+    "category": "function",
+    "text": "NUTS_init(rng, ℓ; q, κ, p, max_depth, ϵ, report)\n\n\nInitialize a NUTS sampler for log density ℓ using local information.\n\nMandatory arguments\n\nrng: the random number generator\nℓ: the log density function specification\n\nKeyword arguments\n\nq: initial position. Default: random (from IID standard normals).\nκ: kinetic energy specification. Default: Gaussian with identity matrix.\np: initial momentum. Default: random from standard multivariate normal.\nmax_depth: maximum tree depth. Default: 5.\nϵ: initial stepsize, or parameters for finding it (passed on to find_initial_stepsize.\n\n\n\n\n\n"
+},
+
+{
+    "location": "api/#DynamicHMC.tune",
+    "page": "High-level API",
+    "title": "DynamicHMC.tune",
+    "category": "function",
+    "text": "sampler′ = tune(sampler, tune)\n\nGiven a sampler (or similar a parametrization) and a tuner, return the updated sampler state after tuning.\n\n\n\n\n\n"
+},
+
+{
+    "location": "api/#DynamicHMC.mcmc",
+    "page": "High-level API",
+    "title": "DynamicHMC.mcmc",
+    "category": "function",
+    "text": "mcmc(sampler, N)\n\nRun the MCMC sampler for N iterations, returning the results as a vector, which has elements that conform to the sampler.\n\n\n\n\n\n"
+},
+
+{
     "location": "api/#DynamicHMC.NUTS_Transition",
     "page": "High-level API",
     "title": "DynamicHMC.NUTS_Transition",
@@ -193,11 +217,59 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
+    "location": "api/#DynamicHMC.NUTS",
+    "page": "High-level API",
+    "title": "DynamicHMC.NUTS",
+    "category": "type",
+    "text": "Specification for the No-U-turn algorithm, including the random number generator, Hamiltonian, the initial position, and various parameters.\n\n\n\n\n\n"
+},
+
+{
+    "location": "api/#DynamicHMC.StepsizeTuner",
+    "page": "High-level API",
+    "title": "DynamicHMC.StepsizeTuner",
+    "category": "type",
+    "text": "Adapt the integrator stepsize for N samples.\n\n\n\n\n\n"
+},
+
+{
+    "location": "api/#DynamicHMC.StepsizeCovTuner",
+    "page": "High-level API",
+    "title": "DynamicHMC.StepsizeCovTuner",
+    "category": "type",
+    "text": "Tune the integrator stepsize and covariance. Covariance tuning is from scratch (no prior information is used), regularized towards the identity matrix.\n\n\n\n\n\n"
+},
+
+{
+    "location": "api/#DynamicHMC.TunerSequence",
+    "page": "High-level API",
+    "title": "DynamicHMC.TunerSequence",
+    "category": "type",
+    "text": "Sequence of tuners, applied in the given order.\n\n\n\n\n\n"
+},
+
+{
+    "location": "api/#DynamicHMC.mcmc_adapting_ϵ",
+    "page": "High-level API",
+    "title": "DynamicHMC.mcmc_adapting_ϵ",
+    "category": "function",
+    "text": "sample, A = mcmc_adapting_ϵ(rng, sampler, N, [A_params, A])\n\nSame as mcmc, but tune stepsize ϵ according to the parameters A_params and initial state A. Return the updated A as the second value.\n\nWhen the last two parameters are not specified, initialize using adapting_ϵ.\n\n\n\n\n\n"
+},
+
+{
+    "location": "api/#DynamicHMC.bracketed_doubling_tuner",
+    "page": "High-level API",
+    "title": "DynamicHMC.bracketed_doubling_tuner",
+    "category": "function",
+    "text": "bracketed_doubling_tuner(; [init], [mid], [M], [term], [regularize])\n\nA sequence of tuners:\n\ntuning stepsize with init steps\ntuning stepsize and covariance: first with mid steps, then repeat with twice the steps M times\ntuning stepsize with term steps\n\nregularize is used for covariance regularization.\n\n\n\n\n\n"
+},
+
+{
     "location": "api/#tuning-1",
     "page": "High-level API",
     "title": "NUTS parameters and tuning",
     "category": "section",
-    "text": "NUTS\nAbstractTuner\nStepsizeTuner\nStepsizeCovTuner\nTunerSequence\nmcmc_adapting_ϵ\nbracketed_doubling_tuner"
+    "text": "NUTS\nStepsizeTuner\nStepsizeCovTuner\nTunerSequence\nmcmc_adapting_ϵ\nbracketed_doubling_tuner"
 },
 
 {
@@ -213,7 +285,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Low-level building blocks",
     "title": "Notation",
     "category": "section",
-    "text": "Notation follows Betancourt (2017), with some differences.Instead of energies, negative energies are used in the code.The following are used consistently for variables:ℓ: log density we sample from, see this explanation\nκ: distribution/density that corresponds to kinetic energy\nH: Hamiltonian\nq: position\np: momentum\nz: point in phase space (q,p)\nϵ: stepsize\na: acceptance rate\nA: acceptance tuning state\nζ: proposal from trajectory (phase point and weight)\nτ: turn statistic\nd: divergence statistic\nπ: log density (different from papers)\nΔ: logdensity relative to initial point of trajectory"
+    "text": "Notation follows Betancourt (2017), with some differences.Instead of energies, negative energies are used in the code.The following are used consistently for variables:ℓ: log density we sample from, supports the interface of LogDensityProblems.AbstractLogDensityProblem\nκ: distribution/density that corresponds to kinetic energy\nH: Hamiltonian\nq: position\np: momentum\nz: point in phase space (q,p)\nϵ: stepsize\na: acceptance rate\nA: acceptance tuning state\nζ: proposal from trajectory (phase point and weight)\nτ: turn statistic\nd: divergence statistic\nπ: log density (different from papers)\nΔ: logdensity relative to initial point of trajectory"
 },
 
 {
@@ -237,7 +309,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Low-level building blocks",
     "title": "DynamicHMC.PhasePoint",
     "category": "type",
-    "text": "struct PhasePoint{T, S<:LogDensityProblems.ValueGradient}\n\nA point in phase space, consists of a position and a momentum.\n\nLog densities and gradients are saved for speed gains, so that the gradient of ℓ at q is not calculated twice for every leapfrog step (both as start- and endpoints).\n\nBecause of caching, a PhasePoint should only be used with a specific Hamiltonian.\n\n\n\n\n\n"
+    "text": "struct PhasePoint{T, S<:ValueGradient}\n\nA point in phase space, consists of a position and a momentum.\n\nLog densities and gradients are saved for speed gains, so that the gradient of ℓ at q is not calculated twice for every leapfrog step (both as start- and endpoints).\n\nBecause of caching, a PhasePoint should only be used with a specific Hamiltonian.\n\n\n\n\n\n"
 },
 
 {
@@ -569,6 +641,22 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
+    "location": "lowlevel/#DynamicHMC.AbstractTuner",
+    "page": "Low-level building blocks",
+    "title": "DynamicHMC.AbstractTuner",
+    "category": "type",
+    "text": "abstract type AbstractTuner\n\nA tuner that adapts the sampler.\n\nAll subtypes support length which returns the number of steps (note: if not in field N, define length accordingly), other parameters vary.\n\n\n\n\n\n"
+},
+
+{
+    "location": "lowlevel/#Tuning-1",
+    "page": "Low-level building blocks",
+    "title": "Tuning",
+    "category": "section",
+    "text": "DynamicHMC.AbstractTuner"
+},
+
+{
     "location": "lowlevel/#DynamicHMC.NUTS_Statistics",
     "page": "Low-level building blocks",
     "title": "DynamicHMC.NUTS_Statistics",
@@ -605,7 +693,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Low-level building blocks",
     "title": "DynamicHMC.AbstractReport",
     "category": "type",
-    "text": "abstract type AbstractReport\n\nSubtypes implement report!, start_progress!, and end_progress!.\n\n\n\n\n\n"
+    "text": "abstract type AbstractReport\n\nSubtypes implement\n\nstart_progress!, which is used to start a particular iteration,\nreport!, which triggers the display of progress,\nend_progress! which \"frees\" the progress report, which can then be reused.\n\n\n\n\n\n"
 },
 
 {
@@ -613,7 +701,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Low-level building blocks",
     "title": "DynamicHMC.report!",
     "category": "function",
-    "text": "report!(report, count)\n\n\nDisplay objects via the appropriate mechanism.\n\nWhen a single Int is given, it is treated as the index of the current step.\n\n\n\n\n\n"
+    "text": "report!(report, count)\n\n\nDisplay report via the appropriate mechanism. count is the index of the current step.\n\n\n\n\n\n"
 },
 
 {
@@ -621,7 +709,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Low-level building blocks",
     "title": "DynamicHMC.start_progress!",
     "category": "function",
-    "text": "start_progress!(report, total, msg)\n\n\nStart a progress meter for an iteration. The second argument is either\n\nnothing, if the total number of steps is unknown,\nan integer, for the total number of steps.\n\nAfter calling this function, report! should be used at every step with an integer.\n\n\n\n\n\n"
+    "text": "start_progress!(report, msg; total_count)\n\n\nStart a progress meter for an iteration.\n\ntotal_count can be overwritten by a keyword argument.\n\nAfter calling this function, report! should be used at every step with an integer.\n\n\n\n\n\n"
 },
 
 {
@@ -629,7 +717,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Low-level building blocks",
     "title": "DynamicHMC.end_progress!",
     "category": "function",
-    "text": "end_progress!(report)\n\n\nTerminate a progress meter.\n\n\n\n\n\n"
+    "text": "end_progress!(report)\nend_progress!(report, count)\n\n\nTerminate a progress meter.\n\n\n\n\n\n"
 },
 
 {
@@ -637,7 +725,7 @@ var documenterSearchIndex = {"docs": [
     "page": "Low-level building blocks",
     "title": "DynamicHMC.ReportIO",
     "category": "type",
-    "text": "ReportIO(; io, color, step_count)\n\n\nReport to the given stream io (defaults to stderr).\n\nFor progress bars, emit new information every after step_count steps.\n\ncolor is used with print_with_color.\n\n\n\n\n\n"
+    "text": "mutable struct ReportIO{TIO<:IO} <: DynamicHMC.AbstractReport\n\nDisplay progress by printing lines to io if countΔ iterations and time_nsΔ nanoseconds have passed since the last display.\n\nio\nIO stream for reporting.\nprint_color\nColor for report messages.\ntotal_count\nExpected total count. When unknown, set to nothing.\ncountΔ\nFor comparing current count to the count at the last report. Not binding when negative.\ntime_nsΔ\nFor comparing time to the time at the last report (in ns). Not binding when negative.\nstart_time_ns\nTime of starting the process. nothing unless start_progress! was called.\nlast_printed_count\nCount when a report was last printed. < 0 before start_progress!.\nlast_printed_time_ns\nTime (in ns) when a report was last printed.\n\n\n\n\n\n"
 },
 
 {
