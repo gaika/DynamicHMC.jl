@@ -345,46 +345,6 @@ var documenterSearchIndex = {"docs": [
 },
 
 {
-    "location": "lowlevel/#DynamicHMC.DualAveragingParameters",
-    "page": "Low-level building blocks",
-    "title": "DynamicHMC.DualAveragingParameters",
-    "category": "type",
-    "text": "Parameters for the dual averaging algorithm of Gelman and Hoffman (2014, Algorithm 6).\n\nTo get reasonable defaults, initialize with DualAveragingParameters(logϵ₀). See adapting_ϵ for a joint constructor.\n\n\n\n\n\n"
-},
-
-{
-    "location": "lowlevel/#DynamicHMC.DualAveragingAdaptation",
-    "page": "Low-level building blocks",
-    "title": "DynamicHMC.DualAveragingAdaptation",
-    "category": "type",
-    "text": "Current state of adaptation for ϵ. Use DualAverageingAdaptation(logϵ₀) to get an initial value. See adapting_ϵ for a joint constructor.\n\n\n\n\n\n"
-},
-
-{
-    "location": "lowlevel/#DynamicHMC.get_ϵ",
-    "page": "Low-level building blocks",
-    "title": "DynamicHMC.get_ϵ",
-    "category": "function",
-    "text": "get_ϵ(A)\nget_ϵ(A, tuning)\n\n\nWhen tuning, return the stepsize ϵ for the next HMC step. Otherwise return the tuned ϵ.\n\n\n\n\n\n"
-},
-
-{
-    "location": "lowlevel/#DynamicHMC.adapting_ϵ",
-    "page": "Low-level building blocks",
-    "title": "DynamicHMC.adapting_ϵ",
-    "category": "function",
-    "text": "DA_params, A =\n\nadapting_ϵ(ϵ; args...)\n\n\nConstructor for both the adaptation parameters and the initial state.\n\n\n\n\n\n"
-},
-
-{
-    "location": "lowlevel/#DynamicHMC.adapt_stepsize",
-    "page": "Low-level building blocks",
-    "title": "DynamicHMC.adapt_stepsize",
-    "category": "function",
-    "text": "A′ =\n\nadapt_stepsize(parameters, A, a)\n\n\nUpdate the adaptation A of log stepsize logϵ with average Metropolis acceptance rate a over the whole visited trajectory, using the dual averaging algorithm of Gelman and Hoffman (2014, Algorithm 6). Return the new adaptation.\n\n\n\n\n\n"
-},
-
-{
     "location": "lowlevel/#Dual-averaging-1",
     "page": "Low-level building blocks",
     "title": "Dual averaging",
